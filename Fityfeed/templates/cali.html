@@ -1,0 +1,239 @@
+{% load static %}
+{% load mathfilters %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    <title>Foodie Calorie Finder</title>
+</head>
+
+<body style="background-color: #f2f8f1;"></body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <img src="/static/images/Logo.png" class="img-responsive logo mb-5 mt-5" alt="Logo" />
+                
+                <!-- Search Form -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="input-group input-group-lg mb-5">
+                        <input type="text" id="query-input" name="query" class="form-control inputstyle"
+                            placeholder="Search for calories in your food..." required>
+                        <button class="btn whoop" type="submit" id="button-addon2">Find calories</button>
+                        <button type="button" class="btn btn-secondary ms-2" id="voice-search-btn">
+                            <img src="/static/images/voice.png" class="img-responsive" alt="M" style="width: 50px; height: 50px;" />
+                        </button>
+                    </div>
+                </form>
+
+
+                {% if api %}
+                    {% if api == "Oops! There was an error" %}
+                        <div class="alert alert-warning"> Oh no! something went wrong. Please try again in sometime. </div>
+                    {% else %}
+                        {% if api.items %}
+                            <h1>{{ api.items.0.name | capfirst }} has a total of <strong>{{ api.items.0.calories }} Calories</strong>
+                                {% if api.items.0.calories > 225 %}
+                                    <img src="/static/images/shocked.png" class="img-responsive" alt="Shocked" />
+                                {% endif %}
+                            </h1>
+                            {% if api.items.0.sodium_mg > 400 %}
+                                <div class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+                                    <div>
+                                        This food contains a high amount of sodium. High Sodium causes severe dehydration and water
+                                        retention.
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if api.items.0.sugar_g > 23 %}
+                                <div class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+                                    <div>
+                                        This food contains a high amount of sugar. High Sugar causes insulin spikes and is the no.1 cause for obesity.
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="row justify-content-center mt-5 mb-5">
+                            <div class="col-md-10 caloriescont shadow rounded">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2 class="mt-3 mb-4">Nutritional Values</h2>
+                                        <ul>
+                                            <li class="servingsize">Serving Size per 100/Grams <span class="float-end"></span></li>
+                                            <li>Carbohydrates: <span class="float-end">{{ api.items.0.carbohydrates_total_g }}</span></li>
+                                            <li>Cholesterol in mg: <span class="float-end">{{ api.items.0.cholesterol_mg }}</span></li>
+                                            <li>Saturated fat: <span class="float-end">{{ api.items.0.fat_saturated_g }}</span></li>
+                                            <li>Total Fat: <span class="float-end">{{ api.items.0.fat_total_g }}</span></li>
+                                            <li>Fiber Content: <span class="float-end">{{ api.items.0.fiber_g }}</span></li>
+                                            <li>Potassium in mg: <span class="float-end">{{ api.items.0.potassium_mg }}</span></li>
+                                            <li>Protein: <span class="float-end">{{ api.items.0.protein_g }}</span></li>
+                                            <li>Sodium in mg: <span class="float-end">{{ api.items.0.sodium_mg }}</span></li>
+                                            <li>Sugar: <span class="float-end">{{ api.items.0.sugar_g }}</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6 mb-5">
+                                        <h4 class="mt-3 mb-4">To burn {{ api.items.0.calories }} calories you will have to</h4>
+                                        <div class="d-flex align-items-center mb-5">
+                                            <div class="flex-shrink-0">
+                                                <img src="{% static 'images/running.png' %}" alt="Running" />
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h5> Jog </h5>
+                                                <p>you will have to jog for <strong>{{ api.items.0.calories | div:229 | mul:60 | floatformat:0 }}</strong> Minutes</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-5">
+                                            <div class="flex-shrink-0">
+                                                <img src="{% static 'images/yoga.png' %}" alt="Yoga" />
+                                            </div>
+                                            <div class="flex-grow-1 ms-4">
+                                                <h5> Do Power Yoga </h5>
+                                                <p>you will have to Power Yoga for <strong>{{ api.items.0.calories | div:223 | mul:60 | floatformat:0 }}</strong> Minutes</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-5">
+                                            <div class="flex-shrink-0">
+                                                <img src="{% static 'images/weightlifter.png' %}" alt="Weightlifting" />
+                                            </div>
+                                            <div class="flex-grow-1 ms-4">
+                                                <h5>Get a Gym Workout </h5>
+                                                <p>you will have to lift weight for <strong>{{ api.items.0.calories | div:483 | mul:60 | floatformat:0 }}</strong> Minutes</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <img src="{% static 'images/walking.png' %}" alt="Walking" />
+                                            </div>
+                                            <div class="flex-grow-1 ms-1">
+                                                <h5> Go for a Brisk Walk </h5>
+                                                <p>you will have to brisk walk for <strong>{{ api.items.0.calories | div:294 | mul:60 | floatformat:0 }}</strong> Minutes</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <canvas id="myChart" width="400" height="400"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('voice-search-btn').addEventListener('click', function() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onresult = function(event) {
+                    const query = event.results[0][0].transcript;
+                    document.getElementById('query-input').value = query;
+                    document.querySelector('form').submit();
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event);
+                };
+
+                recognition.start();
+            } else {
+                alert('Speech recognition is not supported in this browser. Please use Google Chrome.');
+            }
+        });
+
+        
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (!ctx) {
+                console.error('Canvas element with id "myChart" not found.');
+                return;
+            }
+
+            console.log('Creating chart with data:', {
+                carbohydrates: {{ api.items.0.carbohydrates_total_g | mul:1000 }},
+                cholesterol: {{ api.items.0.cholesterol_mg }},
+                fat_saturated: {{ api.items.0.fat_saturated_g | mul:1000 }},
+                fat_total: {{ api.items.0.fat_total_g | mul:1000 }},
+                fiber: {{ api.items.0.fiber_g | mul:1000 }},
+                potassium: {{ api.items.0.potassium_mg }},
+                protein: {{ api.items.0.protein_g | mul:1000 }},
+                sodium: {{ api.items.0.sodium_mg }},
+                sugar: {{ api.items.0.sugar_g | mul:1000 }}
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Carbohydrates', 'Cholesterol', 'Saturated fat', 'Total Fat', 'Fiber Content', 'Potassium', 'Protein', 'Sodium', 'Sugar'],
+                    datasets: [{
+                        label: 'Nutritional Value of {{ api.items.0.name | capfirst }}',
+                        data: [
+                            {{ api.items.0.carbohydrates_total_g | mul:1000 }},
+                            {{ api.items.0.cholesterol_mg }},
+                            {{ api.items.0.fat_saturated_g | mul:1000 }},
+                            {{ api.items.0.fat_total_g | mul:1000 }},
+                            {{ api.items.0.fiber_g | mul:1000 }},
+                            {{ api.items.0.potassium_mg }},
+                            {{ api.items.0.protein_g | mul:1000 }},
+                            {{ api.items.0.sodium_mg }},
+                            {{ api.items.0.sugar_g | mul:1000 }},
+                        ],
+                        backgroundColor: [
+                            'rgba(76, 175, 80, 0.3)',   // Light Green
+                            'rgba(255, 152, 0, 0.3)',   // Light Orange
+                            'rgba(244, 67, 54, 0.3)',   // Light Red
+                            'rgba(33, 150, 243, 0.3)',  // Light Blue
+                            'rgba(156, 39, 176, 0.3)',  // Light Purple
+                            'rgba(255, 235, 59, 0.3)',  // Light Yellow
+                            'rgba(0, 188, 212, 0.3)',   // Light Cyan
+                            'rgba(233, 30, 99, 0.3)',   // Light Pink
+                            'rgba(139, 195, 74, 0.3)',  // Light Light Green
+                            'rgba(255, 193, 7, 0.3)',   // Light Amber
+                        ],
+                        borderColor: [
+                            'rgba(76, 175, 80, 1)',     // Dark Green
+                            'rgba(255, 152, 0, 1)',     // Dark Orange
+                            'rgba(244, 67, 54, 1)',     // Dark Red
+                            'rgba(33, 150, 243, 1)',    // Dark Blue
+                            'rgba(156, 39, 176, 1)',    // Dark Purple
+                            'rgba(255, 235, 59, 1)',    // Dark Yellow
+                            'rgba(0, 188, 212, 1)',     // Dark Cyan
+                            'rgba(233, 30, 99, 1)',     // Dark Pink
+                            'rgba(139, 195, 74, 1)',    // Dark Light Green
+                            'rgba(255, 193, 7, 1)',     // Dark Amber
+                        ],
+                        borderWidth: 1.5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

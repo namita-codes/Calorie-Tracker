@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="card mx-auto mt-5" style="max-width: 600px;">
+    <div class="card-body">
+        <h4 class="card-title text-center">Add New Food Item</h4>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-center">
+                <input type="submit" class="btn btn-success" value="Submit">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

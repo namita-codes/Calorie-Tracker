@@ -1,0 +1,74 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>BMI Calculator</title>
+    <style>
+        .bmi-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="bmi-container bg-light">
+            <h1 class="mb-4 text-center">BMI Calculator</h1>
+            <form onsubmit="calculateBMI(event)">
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                    <input type="number" step="0.1" class="form-control" id="weight" name="weight" required>
+                </div>
+                <div class="mb-3">
+                    <label for="height" class="form-label">Height (cm)</label>
+                    <input type="number" step="0.1" class="form-control" id="height" name="height" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Calculate</button>
+            </form>
+            <div id="bmi-result" class="mt-4 text-center"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateBMI(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value) / 100; // convert cm to meters
+
+            if (isNaN(weight) || isNaN(height) || height <= 0) {
+                alert('Please enter valid values for weight and height.');
+                return;
+            }
+
+            const bmi = weight / (height * height);
+            let category;
+
+            if (bmi < 18.5) {
+                category = 'Underweight';
+            } else if (bmi < 24.9) {
+                category = 'Normal weight';
+            } else if (bmi < 29.9) {
+                category = 'Overweight';
+            } else {
+                category = 'Obesity';
+            }
+
+            document.getElementById('bmi-result').innerHTML = 
+                `<div class="alert alert-info">
+                    Your BMI is <strong>${bmi.toFixed(2)}</strong> which is considered <strong>${category}</strong>.
+                </div>`;
+        }
+    </script>
+</body>
+</html>

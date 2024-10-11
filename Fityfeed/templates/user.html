@@ -1,0 +1,144 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h3 style="color: #0d0d0d; font-size: 2em; font-weight: bolder;">Total number of items consumed today: {{ cnt }}</h3>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 style="color: #033b10; font-size: 2.5em; font-weight: bolder;">Tracker</h2>
+            <div class="flex-box-row">
+                <h4>Calorie Limit: 2000</h4>
+                <h4>Total Calories consumed: <span class="text-danger">{{ totalCalories }}</span></h4>
+                <h4>Left: <span class="text-success">{{ CalorieLeft }}</span></h4>
+            </div>
+
+            <form method="GET" action="">
+                <label for="start_date">Date:</label>
+                <input type="date" id="start_date" name="start_date" value="{{ start_date }}">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+            
+            <h4 class="mt-4">Breakfast</h4>
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Calorie</th>
+                        <th>Carbs</th>
+                        <th>Fats</th>
+                        <th>Protein</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_fooditem in breakfast %}
+                        {% for food in user_fooditem.fooditem.all %}
+                            <tr>
+                                <td>{{ food.name }}</td>
+                                <td>{{ food.calorie }}</td>
+                                <td>{{ food.carbohydrate }}</td>
+                                <td>{{ food.fats }}</td>
+                                <td>{{ food.protein }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <h4 class="mt-4">Lunch</h4>
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Calorie</th>
+                        <th>Carbs</th>
+                        <th>Fats</th>
+                        <th>Protein</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_fooditem in lunch %}
+                        {% for food in user_fooditem.fooditem.all %}
+                            <tr>
+                                <td>{{ food.name }}</td>
+                                <td>{{ food.calorie }}</td>
+                                <td>{{ food.carbohydrate }}</td>
+                                <td>{{ food.fats }}</td>
+                                <td>{{ food.protein }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h4 class="mt-4">Snacks</h4>
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Calorie</th>
+                        <th>Carbs</th>
+                        <th>Fats</th>
+                        <th>Protein</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_fooditem in snacks %}
+                        {% for food in user_fooditem.fooditem.all %}
+                            <tr>
+                                <td>{{ food.name }}</td>
+                                <td>{{ food.calorie }}</td>
+                                <td>{{ food.carbohydrate }}</td>
+                                <td>{{ food.fats }}</td>
+                                <td>{{ food.protein }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h4 class="mt-4">Dinner</h4>
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Calorie</th>
+                        <th>Carbs</th>
+                        <th>Fats</th>
+                        <th>Protein</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user_fooditem in dinner %}
+                        {% for food in user_fooditem.fooditem.all %}
+                            <tr>
+                                <td>{{ food.name }}</td>
+                                <td>{{ food.calorie }}</td>
+                                <td>{{ food.carbohydrate }}</td>
+                                <td>{{ food.fats }}</td>
+                                <td>{{ food.protein }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            
+            <form action="{% url 'addFooditem' %}" method="POST" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom">
+                    <span class="glyphicon glyphicon-plus"></span> Add Food Item
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <a href="{% url 'cali' %}" class="btn custom-btn btn-block">Open Calorie Finder</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'bmi' %}" class="btn custom-btn btn-block">Calculate BMI</a>
+        </div>
+    </div>
+    <hr class="mt-5">
+</div>
+{% endblock %}

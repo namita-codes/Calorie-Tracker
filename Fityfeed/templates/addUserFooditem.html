@@ -1,0 +1,52 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <style>
+        body {
+            background-image: url('{% static "images/back7.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for better readability */
+            border: 1px solid black;
+            border-radius: 10px;
+            margin: auto;
+            padding: 40px;
+            width: 50%; /* Adjust width as needed */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-success {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.non_field_errors }}
+    </div>
+    <div class="form-group">
+        {{ form.customer.label_tag }} {{ form.customer }}
+    </div>
+    <div class="form-group">
+        {{ form.fooditem.label_tag }} {{ form.fooditem }}
+    </div>
+    <div class="form-group">
+        {{ form.meal_type.label_tag }} {{ form.meal_type }}
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-success" value="Submit">
+    </div>
+</form>
+{% endblock %}
